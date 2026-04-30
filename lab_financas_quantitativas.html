@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Laboratório de Finanças Quantitativas — B3</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark:   #0a1628;
+    --blue-mid:    #0f2547;
+    --blue-acc:    #185FA5;
+    --blue-light:  #378ADD;
+    --blue-pale:   #B5D4F4;
+    --blue-ghost:  #E6F1FB;
+    --amber:       #FAC775;
+    --amber-dark:  #BA7517;
+    --amber-bg:    #FAEEDA;
+    --green:       #34a853;
+    --green-dark:  #27500A;
+    --green-bg:    #EAF3DE;
+    --red:         #E24B4A;
+    --red-bg:      #FCEBEB;
+    --gray-text:   #888780;
+    --text:        #0f1923;
+    --text-muted:  #5a6270;
+    --bg:          #f4f6fa;
+    --surface:     #ffffff;
+    --border:      rgba(0,0,0,0.08);
+    --border-md:   rgba(0,0,0,0.13);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HERO / COVER ── */
+  .hero {
+    background: var(--blue-dark);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(55,138,221,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(55,138,221,0.07) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .hero-glow-1 {
+    position: absolute;
+    top: -120px; left: -80px;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(24,95,165,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-glow-2 {
+    position: absolute;
+    bottom: -160px; right: -60px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(186,117,23,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 72px 32px 56px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(55,138,221,0.15);
+    border: 1px solid rgba(55,138,221,0.3);
+    color: #85B7EB;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #85B7EB;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    color: #fff;
+    line-height: 1.08;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .hero-desc {
+    color: rgba(255,255,255,0.5);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hero-module {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 22px;
+    text-align: center;
+    min-width: 110px;
+    backdrop-filter: blur(8px);
+  }
+  .stat-n {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-l {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 32px 4rem;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--blue-light);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--border-md); }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title-icon {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--blue-ghost);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ── TICKER SEARCH ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 11px 16px 11px 42px;
+    border: 1px solid var(--border-md);
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-wrap input:focus {
+    border-color: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
+    background: #fff;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-text);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border-md);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+  }
+  .dropdown.open { display: block; }
+  .dd-item {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    transition: background 0.12s;
+  }
+  .dd-item:last-child { border-bottom: none; }
+  .dd-item:hover { background: var(--bg); }
+  .dd-left { display: flex; flex-direction: column; gap: 2px; }
+  .dd-ticker { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text); }
+  .dd-name { font-size: 11px; color: var(--text-muted); }
+  .dd-sector {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: var(--blue-ghost);
+    color: var(--blue-acc);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    min-height: 32px;
+    margin-bottom: 6px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-ghost);
+    border: 1px solid var(--blue-pale);
+    color: var(--blue-acc);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 8px 4px 11px;
+    border-radius: 20px;
+    animation: chipIn 0.18s ease;
+  }
+  @keyframes chipIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .chip-x {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(24,95,165,0.15);
+    border: none;
+    color: var(--blue-acc);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; line-height: 1;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .chip-x:hover { background: rgba(24,95,165,0.3); }
+
+  .helper {
+    font-size: 11px;
+    color: var(--gray-text);
+    margin-top: 4px;
+  }
+
+  /* ── RADIO PILLS ── */
+  .pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px 10px;
+    border: 1.5px solid var(--border-md);
+    border-radius: 12px;
+    background: var(--bg);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .pill:hover { border-color: var(--blue-light); background: var(--blue-ghost); }
+  .pill-icon { font-size: 20px; margin-bottom: 5px; }
+  .pill-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .pill-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+  .pill.sel-blue   { border-color: var(--blue-light); background: var(--blue-ghost); }
+  .pill.sel-blue .pill-label { color: var(--blue-acc); }
+  .pill.sel-green  { border-color: #3B6D11; background: var(--green-bg); }
+  .pill.sel-green .pill-label { color: var(--green-dark); }
+  .pill.sel-amber  { border-color: var(--amber-dark); background: var(--amber-bg); }
+  .pill.sel-amber .pill-label { color: #633806; }
+  .pill.sel-red    { border-color: #A32D2D; background: var(--red-bg); }
+  .pill.sel-red .pill-label { color: #501313; }
+
+  /* ── SUMMARY BAR ── */
+  .summary-bar {
+    background: linear-gradient(90deg, var(--blue-dark), #0f2547);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(55,138,221,0.2);
+  }
+  .summary-bar.show { display: flex; }
+  .summary-item { display: flex; flex-direction: column; gap: 2px; }
+  .summary-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Mono', monospace; }
+  .summary-value { font-size: 13px; font-weight: 500; color: #fff; }
+  .summary-div { width: 1px; height: 28px; background: rgba(255,255,255,0.1); }
+
+  /* ── CTA BUTTON ── */
+  .cta-wrap { margin-top: 0.5rem; }
+  .cta-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--blue-acc);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    letter-spacing: 0.01em;
+  }
+  .cta-btn:hover { background: #0C447C; }
+  .cta-btn:active { transform: scale(0.99); }
+  .cta-btn:disabled {
+    background: #d0d5de;
+    color: #9aa0a6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .cta-btn svg { flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 1rem 2rem 2rem;
+    font-size: 11px;
+    color: var(--gray-text);
+    border-top: 1px solid var(--border);
+  }
+  .footer strong { color: var(--text-muted); }
+
+  @media (max-width: 640px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: row; align-items: flex-start; }
+    .stat-card { min-width: 80px; padding: 12px 16px; }
+    .stat-n { font-size: 28px; }
+    .main { padding: 1.5rem 16px 3rem; }
+    .card { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Finanças Quantitativas · B3
+      </div>
+      <h1>Análise de<br><em>Mercado</em><br>Integrada</h1>
+      <p class="hero-desc">
+        Monte sua carteira, selecione o cenário macro e perfil de risco. O sistema roda valuation DCF, Monte Carlo, fronteira eficiente e backtest automaticamente.
+      </p>
+      <div class="hero-modules">
+        <span class="hero-module">Valuation DCF</span>
+        <span class="hero-module">Monte Carlo</span>
+        <span class="hero-module">Fronteira Eficiente</span>
+        <span class="hero-module">Backtest</span>
+        <span class="hero-module">Score Integrado</span>
+        <span class="hero-module">Análise de Crédito</span>
+        <span class="hero-module">Anomalias</span>
+        <span class="hero-module">Clusters</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-n">105</div>
+        <div class="stat-l">ativos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n">14</div>
+        <div class="stat-l">setores</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n">11</div>
+        <div class="stat-l">módulos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="section-label">Configuração da análise</div>
+
+  <!-- ATIVOS -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon">📌</div>
+      Seleção de ativos
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="ticker-input" placeholder="Buscar por ticker, nome ou setor…" autocomplete="off" />
+      <div class="dropdown" id="dropdown"></div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <p class="helper">Selecione ao menos 2 ativos para habilitar a análise.</p>
+  </div>
+
+  <!-- CENÁRIO -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon">🌐</div>
+      Cenário macroeconômico
+    </div>
+    <div class="pill-group" id="cenario-group">
+      <div class="pill sel-green" data-val="Bull" onclick="pickPill('cenario-group','Bull',this,'sel-green')">
+        <div class="pill-icon">📈</div>
+        <div class="pill-label">Bull</div>
+        <div class="pill-sub">Expansão</div>
+      </div>
+      <div class="pill" data-val="Base" onclick="pickPill('cenario-group','Base',this,'sel-amber')">
+        <div class="pill-icon">📊</div>
+        <div class="pill-label">Base</div>
+        <div class="pill-sub">Neutro</div>
+      </div>
+      <div class="pill" data-val="Bear" onclick="pickPill('cenario-group','Bear',this,'sel-red')">
+        <div class="pill-icon">📉</div>
+        <div class="pill-label">Bear</div>
+        <div class="pill-sub">Recessão</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon">🎯</div>
+      Perfil do investidor
+    </div>
+    <div class="pill-group" id="perfil-group">
+      <div class="pill" data-val="Conservador" onclick="pickPill('perfil-group','Conservador',this,'sel-green')">
+        <div class="pill-icon">🛡</div>
+        <div class="pill-label">Conservador</div>
+        <div class="pill-sub">Baixo risco</div>
+      </div>
+      <div class="pill sel-blue" data-val="Moderado" onclick="pickPill('perfil-group','Moderado',this,'sel-blue')">
+        <div class="pill-icon">⚖</div>
+        <div class="pill-label">Moderado</div>
+        <div class="pill-sub">Equilibrado</div>
+      </div>
+      <div class="pill" data-val="Agressivo" onclick="pickPill('perfil-group','Agressivo',this,'sel-red')">
+        <div class="pill-icon">🚀</div>
+        <div class="pill-label">Agressivo</div>
+        <div class="pill-sub">Alto risco</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERÍODO -->
+  <div class="card">
+    <div class="card-title">
+      <div class="card-title-icon">📅</div>
+      Período histórico
+    </div>
+    <div class="pill-group" id="periodo-group">
+      <div class="pill" data-val="1y" onclick="pickPill('periodo-group','1y',this,'sel-blue')">
+        <div class="pill-label">1 ano</div>
+        <div class="pill-sub">Curto prazo</div>
+      </div>
+      <div class="pill" data-val="2y" onclick="pickPill('periodo-group','2y',this,'sel-blue')">
+        <div class="pill-label">2 anos</div>
+        <div class="pill-sub">Médio</div>
+      </div>
+      <div class="pill sel-blue" data-val="3y" onclick="pickPill('periodo-group','3y',this,'sel-blue')">
+        <div class="pill-label">3 anos</div>
+        <div class="pill-sub">Recomendado</div>
+      </div>
+      <div class="pill" data-val="5y" onclick="pickPill('periodo-group','5y',this,'sel-blue')">
+        <div class="pill-label">5 anos</div>
+        <div class="pill-sub">Longo prazo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-bar" id="summary-bar">
+    <div class="summary-item">
+      <span class="summary-label">Ativos</span>
+      <span class="summary-value" id="s-tickers">—</span>
+    </div>
+    <div class="summary-div"></div>
+    <div class="summary-item">
+      <span class="summary-label">Cenário</span>
+      <span class="summary-value" id="s-cenario">Bull</span>
+    </div>
+    <div class="summary-div"></div>
+    <div class="summary-item">
+      <span class="summary-label">Perfil</span>
+      <span class="summary-value" id="s-perfil">Moderado</span>
+    </div>
+    <div class="summary-div"></div>
+    <div class="summary-item">
+      <span class="summary-label">Período</span>
+      <span class="summary-value" id="s-periodo">3y</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="cta-btn" id="cta-btn" disabled onclick="gerar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="m22 17-5 5-5-5"/><path d="M17 22V12"/>
+      </svg>
+      Selecione ao menos 2 ativos
+    </button>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <strong>Laboratório de Finanças Quantitativas</strong> · Caio, Fernando Tinoco, Leonardo Galvão e Sergio<br>
+  ⚠ Material exclusivamente educacional. Não constitui recomendação de investimento.
+</footer>
+
+<script>
+const ATIVOS = [
+  {t:"ITUB4.SA",n:"Itaú Unibanco",s:"Financeiro"},
+  {t:"BBDC4.SA",n:"Bradesco",s:"Financeiro"},
+  {t:"BBAS3.SA",n:"Banco do Brasil",s:"Financeiro"},
+  {t:"SANB11.SA",n:"Santander Brasil",s:"Financeiro"},
+  {t:"B3SA3.SA",n:"B3",s:"Financeiro"},
+  {t:"IRBR3.SA",n:"IRB Brasil RE",s:"Financeiro"},
+  {t:"BBSE3.SA",n:"BB Seguridade",s:"Financeiro"},
+  {t:"PSSA3.SA",n:"Porto Seguro",s:"Financeiro"},
+  {t:"WIZC3.SA",n:"Wiz Co",s:"Financeiro"},
+  {t:"PETR4.SA",n:"Petrobras",s:"Energia"},
+  {t:"PETR3.SA",n:"Petrobras ON",s:"Energia"},
+  {t:"UGPA3.SA",n:"Ultrapar",s:"Energia"},
+  {t:"EGIE3.SA",n:"Engie Brasil",s:"Energia"},
+  {t:"CMIG4.SA",n:"Cemig",s:"Energia"},
+  {t:"CPFE3.SA",n:"CPFL Energia",s:"Energia"},
+  {t:"TAEE11.SA",n:"Taesa",s:"Energia"},
+  {t:"AURE3.SA",n:"Auren Energia",s:"Energia"},
+  {t:"NEOE3.SA",n:"Neoenergia",s:"Energia"},
+  {t:"EQTL3.SA",n:"Equatorial Energia",s:"Energia"},
+  {t:"GEPA4.SA",n:"Gepsa",s:"Energia"},
+  {t:"MGLU3.SA",n:"Magazine Luiza",s:"Varejo"},
+  {t:"LREN3.SA",n:"Lojas Renner",s:"Varejo"},
+  {t:"AZZA3.SA",n:"Arezzo & Co",s:"Varejo"},
+  {t:"ALPA4.SA",n:"Alpargatas",s:"Varejo"},
+  {t:"CEAB3.SA",n:"C&A Modas",s:"Varejo"},
+  {t:"AMAR3.SA",n:"Marisa",s:"Varejo"},
+  {t:"VIVA3.SA",n:"Vivara",s:"Varejo"},
+  {t:"SBFG3.SA",n:"SBF Group (Centauro)",s:"Varejo"},
+  {t:"GRND3.SA",n:"Grendene",s:"Varejo"},
+  {t:"VULC3.SA",n:"Vulcabras",s:"Varejo"},
+  {t:"VALE3.SA",n:"Vale",s:"Mineracao"},
+  {t:"CBAV3.SA",n:"CBA",s:"Mineracao"},
+  {t:"FIQE3.SA",n:"Fique",s:"Mineracao"},
+  {t:"BRAP4.SA",n:"Bradespar",s:"Mineracao"},
+  {t:"GGBR4.SA",n:"Gerdau",s:"Siderurgia"},
+  {t:"USIM5.SA",n:"Usiminas",s:"Siderurgia"},
+  {t:"CSNA3.SA",n:"CSN",s:"Siderurgia"},
+  {t:"CMIN3.SA",n:"CSN Mineração",s:"Siderurgia"},
+  {t:"TOTS3.SA",n:"Totvs",s:"Tecnologia"},
+  {t:"POSI3.SA",n:"Positivo Tecnologia",s:"Tecnologia"},
+  {t:"LWSA3.SA",n:"Locaweb",s:"Tecnologia"},
+  {t:"CASH3.SA",n:"Méliuz",s:"Tecnologia"},
+  {t:"IFCM3.SA",n:"Infracommerce",s:"Tecnologia"},
+  {t:"INTB3.SA",n:"Intelbras",s:"Tecnologia"},
+  {t:"VIVT3.SA",n:"Vivo (Telefonica)",s:"Telecom"},
+  {t:"TIMS3.SA",n:"TIM",s:"Telecom"},
+  {t:"OIBR3.SA",n:"Oi",s:"Telecom"},
+  {t:"TELB4.SA",n:"Telebras",s:"Telecom"},
+  {t:"RDOR3.SA",n:"Rede D'Or",s:"Saude"},
+  {t:"HAPV3.SA",n:"Hapvida",s:"Saude"},
+  {t:"FLRY3.SA",n:"Fleury",s:"Saude"},
+  {t:"DASA3.SA",n:"Dasa",s:"Saude"},
+  {t:"AALR3.SA",n:"Alliar",s:"Saude"},
+  {t:"ONCO3.SA",n:"Oncoclínicas",s:"Saude"},
+  {t:"MATD3.SA",n:"Mater Dei",s:"Saude"},
+  {t:"QUAL3.SA",n:"Qualicorp",s:"Saude"},
+  {t:"ABEV3.SA",n:"Ambev",s:"Consumo"},
+  {t:"BEEF3.SA",n:"Minerva Foods",s:"Consumo"},
+  {t:"SMTO3.SA",n:"São Martinho",s:"Consumo"},
+  {t:"RAIZ4.SA",n:"Raízen",s:"Consumo"},
+  {t:"SLCE3.SA",n:"SLC Agrícola",s:"Consumo"},
+  {t:"MDIA3.SA",n:"M. Dias Branco",s:"Consumo"},
+  {t:"CAML3.SA",n:"Camil Alimentos",s:"Consumo"},
+  {t:"PCAR3.SA",n:"GPA (Pão de Açúcar)",s:"Consumo"},
+  {t:"ASAI3.SA",n:"Assaí Atacadista",s:"Consumo"},
+  {t:"WEGE3.SA",n:"WEG",s:"Industria"},
+  {t:"ROMI3.SA",n:"Romi",s:"Industria"},
+  {t:"FRAS3.SA",n:"Frasle",s:"Industria"},
+  {t:"RECV3.SA",n:"PetroRecôncavo",s:"Industria"},
+  {t:"TUPY3.SA",n:"Tupy",s:"Industria"},
+  {t:"MTRE3.SA",n:"Mitre Realty",s:"Industria"},
+  {t:"MRVE3.SA",n:"MRV Engenharia",s:"Construcao"},
+  {t:"CYRE3.SA",n:"Cyrela",s:"Construcao"},
+  {t:"EZTC3.SA",n:"EZTEC",s:"Construcao"},
+  {t:"EVEN3.SA",n:"Even",s:"Construcao"},
+  {t:"DIRR3.SA",n:"Direcional",s:"Construcao"},
+  {t:"PLPL3.SA",n:"Plano&Plano",s:"Construcao"},
+  {t:"TRIS3.SA",n:"Trisul",s:"Construcao"},
+  {t:"LAVV3.SA",n:"Lavvi",s:"Construcao"},
+  {t:"HBOR3.SA",n:"Helbor",s:"Construcao"},
+  {t:"TEND3.SA",n:"Construtora Tenda",s:"Construcao"},
+  {t:"RAIL3.SA",n:"Rumo Logística",s:"Logistica"},
+  {t:"ECOR3.SA",n:"Ecorodovias",s:"Logistica"},
+  {t:"VAMO3.SA",n:"Vamos",s:"Logistica"},
+  {t:"MOVI3.SA",n:"Movida",s:"Logistica"},
+  {t:"RENT3.SA",n:"Localiza Rent a Car",s:"Logistica"},
+  {t:"PRIO3.SA",n:"PetroRio",s:"Logistica"},
+  {t:"COGN3.SA",n:"Cogna Educação",s:"Educacao"},
+  {t:"YDUQ3.SA",n:"Yduqs",s:"Educacao"},
+  {t:"ANIM3.SA",n:"Anima Educação",s:"Educacao"},
+  {t:"SEER3.SA",n:"Ser Educacional",s:"Educacao"},
+  {t:"AGRO3.SA",n:"BrasilAgro",s:"Agronegocio"},
+  {t:"TTEN3.SA",n:"3Tentos",s:"Agronegocio"},
+  {t:"LAND3.SA",n:"Terra Santa Agro",s:"Agronegocio"},
+  {t:"SUZB3.SA",n:"Suzano",s:"Papel e Celulose"},
+  {t:"KLBN11.SA",n:"Klabin",s:"Papel e Celulose"},
+  {t:"BRAV3.SA",n:"Brava Energia",s:"Petroleo e Gas"},
+  {t:"CSAN3.SA",n:"Cosan",s:"Petroleo e Gas"},
+  {t:"SAPR11.SA",n:"Sanepar",s:"Saneamento"},
+  {t:"SBSP3.SA",n:"Sabesp",s:"Saneamento"},
+  {t:"CSMG3.SA",n:"Copasa",s:"Saneamento"},
+];
+
+let selected = [];
+let state = { cenario:'Bull', perfil:'Moderado', periodo:'3y' };
+
+const inp = document.getElementById('ticker-input');
+const dd  = document.getElementById('dropdown');
+const chipsEl = document.getElementById('chips');
+const btn = document.getElementById('cta-btn');
+
+inp.addEventListener('input', () => {
+  const q = inp.value.trim().toLowerCase();
+  if (!q) { dd.classList.remove('open'); return; }
+  const hits = ATIVOS.filter(a =>
+    !selected.includes(a.t) &&
+    (a.t.toLowerCase().includes(q) || a.n.toLowerCase().includes(q) || a.s.toLowerCase().includes(q))
+  ).slice(0, 12);
+  if (!hits.length) { dd.classList.remove('open'); return; }
+  dd.innerHTML = hits.map(a => `
+    <div class="dd-item" onclick="add('${a.t}')">
+      <div class="dd-left">
+        <span class="dd-ticker">${a.t.replace('.SA','')}</span>
+        <span class="dd-name">${a.n}</span>
+      </div>
+      <span class="dd-sector">${a.s}</span>
+    </div>`).join('');
+  dd.classList.add('open');
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) dd.classList.remove('open');
+});
+
+function add(ticker) {
+  if (selected.includes(ticker)) return;
+  selected.push(ticker);
+  inp.value = '';
+  dd.classList.remove('open');
+  render();
+}
+
+function remove(ticker) {
+  selected = selected.filter(t => t !== ticker);
+  render();
+}
+
+function render() {
+  chipsEl.innerHTML = selected.map(t =>
+    `<div class="chip">${t.replace('.SA','')}
+      <button class="chip-x" onclick="remove('${t}')" title="Remover">×</button>
+    </div>`
+  ).join('');
+
+  const ok = selected.length >= 2;
+  btn.disabled = !ok;
+  if (ok) {
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="m22 17-5 5-5-5"/><path d="M17 22V12"/></svg>
+      Gerar relatório com ${selected.length} ativo${selected.length>1?'s':''}`;
+  } else {
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="m22 17-5 5-5-5"/><path d="M17 22V12"/></svg>
+      Selecione ao menos 2 ativos`;
+  }
+
+  const bar = document.getElementById('summary-bar');
+  if (selected.length) {
+    bar.classList.add('show');
+    document.getElementById('s-tickers').textContent = selected.map(t=>t.replace('.SA','')).join(', ');
+    document.getElementById('s-cenario').textContent = state.cenario;
+    document.getElementById('s-perfil').textContent = state.perfil;
+    document.getElementById('s-periodo').textContent = state.periodo;
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function pickPill(group, val, el, cls) {
+  document.getElementById(group).querySelectorAll('.pill').forEach(p => {
+    p.className = 'pill';
+  });
+  el.classList.add('pill', cls);
+  state[group.replace('-group','')] = val;
+  render();
+}
+
+function gerar() {
+  if (selected.length < 2) return;
+  const tickers = selected.join(',');
+  const txt = `Execute a análise completa do notebook com os seguintes parâmetros:\n\n- **Tickers**: ${tickers}\n- **Cenário macroeconômico**: ${state.cenario}\n- **Perfil do investidor**: ${state.perfil}\n- **Período histórico**: ${state.periodo}\n\nGere o relatório completo conforme o código do notebook: estatísticas descritivas, retorno acumulado, risco/retorno, valuation DCF com Monte Carlo, dashboard integrado com scores e recomendações, fronteira eficiente e carteira sugerida, backtest vs CDI e IBOVESPA, análise de anomalias e correlação, alertas de crédito e conclusão.`;
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.innerHTML = '✓ Prompt copiado! Cole no Claude para rodar a análise.';
+    btn.style.background = '#27500A';
+    setTimeout(() => {
+      btn.style.background = '';
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="m22 17-5 5-5-5"/><path d="M17 22V12"/></svg> Gerar relatório com ${selected.length} ativo${selected.length>1?'s':''}`;
+    }, 3000);
+  }).catch(() => alert(txt));
+}
+</script>
+</body>
+</html>
